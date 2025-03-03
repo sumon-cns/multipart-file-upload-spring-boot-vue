@@ -1,6 +1,8 @@
 package com.cnsbd.multiparttest;
 
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class TestService {
@@ -712,5 +714,30 @@ public class TestService {
                 </script>
                 
                 """;
+    }
+
+    public Object requestParamTest(String encApplicationId, MultipartFile file, Long docTypeId) {
+        return "File uploaded successfully: " + file.getOriginalFilename();
+    }
+
+    public String fileInsideObjectTest(RequestWithFile request) {
+        // spring can't handle nested files => 'fileWithTypes[0][type]',
+        // in this case need to append to formData
+
+        String impl = """
+                const res = await axios.post(baseUrl + '/financial-assistance/file-inside-object', {
+                      name: form.value.name,
+                      file: form.value.file,
+                      files: [form.value.file, form.value.file]
+                    }, {
+                      headers: {
+                        'Content-Type': 'multipart/form-data'
+                      }
+                    })
+                """;
+
+
+        return request.getFile().getOriginalFilename() + request.getFiles().stream()
+                .map(MultipartFile::getOriginalFilename).toList();
     }
 }

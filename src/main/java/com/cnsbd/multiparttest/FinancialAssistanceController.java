@@ -9,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/financial-assistance")
@@ -50,4 +51,16 @@ public class FinancialAssistanceController {
         return ResponseEntity.ok("Success");
     }
 
+
+    @PostMapping(value = "/param-test")
+    public ResponseEntity<?> attachmentSaveUpdate(@RequestParam("encApplicationId") String encApplicationId,
+                                                  @RequestParam("file") MultipartFile file,
+                                                  @RequestParam("docId") Long docTypeId) {
+        return ResponseEntity.ok(testService.requestParamTest(encApplicationId, file, docTypeId));
+    }
+
+    @PostMapping(value = "/file-inside-object")
+    public ResponseEntity<?> fileInsideObject(@Valid @ModelAttribute RequestWithFile request) {
+        return ResponseEntity.ok(testService.fileInsideObjectTest(request));
+    }
 }
